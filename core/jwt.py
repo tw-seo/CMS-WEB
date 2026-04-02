@@ -6,7 +6,10 @@ from apps.account.models import Account
 from jwt import ExpiredSignatureError, InvalidTokenError
 from ninja.security import HttpBearer
 
-SECRET_KEY = "0m-%p7jel*ft3%u5kt1^_dulf_&%78j$=_01w1ik&vb@%x%f93"
+SECRET_KEY = os.getenv(
+    "APP_JWT_SECRET",
+    os.getenv("JWT_SECRET", "replace-with-jwt-secret"),
+)
 ALGORITHM = "HS256"
 LEEWAY_SECONDS = 60
 

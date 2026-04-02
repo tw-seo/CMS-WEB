@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from typing import Any, Dict
@@ -14,7 +15,10 @@ from apps.pms.services.auth import PmsLicenseAuthService
 
 class AuthService:
     def __init__(self):
-        self.secret = "0m-%p7jel*ft3%u5kt1^_dulf_&%78j$=_01w1ik&vb@%x%f93"
+        self.secret = os.getenv(
+            "APP_JWT_SECRET",
+            os.getenv("JWT_SECRET", "replace-with-jwt-secret"),
+        )
         self.alg = "HS256"
         self.pms_auth_service = PmsLicenseAuthService()
         self.ttl = timedelta(days=1)

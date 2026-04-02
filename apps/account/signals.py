@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth.hashers import make_password
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
@@ -8,7 +10,7 @@ from apps.account.models import Account
 @receiver(post_migrate, dispatch_uid="create_default_admin_user_once")
 def create_default_admin_user(sender, **kwargs):
     admin_username = "administrator"
-    admin_password = "7790"
+    admin_password = os.getenv("DEFAULT_ADMIN_PASSWORD", "replace-with-admin-password")
 
     admin = Account.objects.filter(username=admin_username).first()
     if admin:

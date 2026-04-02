@@ -51,21 +51,21 @@ PostgreSQL 데이터베이스입니다.
 ### 기본 실행
 
 ```bash
-cd /home/twseo/projects/K-Safety-CMS-WEB
+cd /path/to/CMS-WEB
 docker-compose --env-file .env.prod up -d --build
 ```
 
 ### 종료
 
 ```bash
-cd /home/twseo/projects/K-Safety-CMS-WEB
+cd /path/to/CMS-WEB
 docker-compose --env-file .env.prod down
 ```
 
 ### 마이그레이션
 
 ```bash
-cd /home/twseo/projects/K-Safety-CMS-WEB
+cd /path/to/CMS-WEB
 docker-compose --env-file .env.prod exec web python manage.py makemigrations
 docker-compose --env-file .env.prod exec web python manage.py migrate
 ```
@@ -73,7 +73,7 @@ docker-compose --env-file .env.prod exec web python manage.py migrate
 ### 로그 확인
 
 ```bash
-cd /home/twseo/projects/K-Safety-CMS-WEB
+cd /path/to/CMS-WEB
 docker-compose --env-file .env.prod logs -f web
 docker-compose --env-file .env.prod logs -f mediamtx
 ```
@@ -88,7 +88,7 @@ docker-compose --env-file .env.prod logs -f mediamtx
 
 ## 5. 주요 설정값
 
-설정 파일: [.env.prod](/home/twseo/projects/K-Safety-CMS-WEB/.env.prod)
+설정 파일: [.env.prod](./.env.prod)
 
 ### 데이터베이스
 
@@ -207,6 +207,6 @@ curl http://127.0.0.1:8888/{stream_path}/index.m3u8
 
 ## 9. 참고
 
-- 주요 API 라우트: [config/urls.py](/home/twseo/projects/K-Safety-CMS-WEB/config/urls.py)
-- MediaMTX API: [apps/mediamtx/api/mediamtx.py](/home/twseo/projects/K-Safety-CMS-WEB/apps/mediamtx/api/mediamtx.py)
-- Docker 구성: [docker-compose.yml](/home/twseo/projects/K-Safety-CMS-WEB/docker-compose.yml)
+- 주요 API 라우트: [config/urls.py](./config/urls.py)
+- MediaMTX API: [apps/mediamtx/api/mediamtx.py](./apps/mediamtx/api/mediamtx.py)
+- Docker 구성: [docker-compose.yml](./docker-compose.yml)
