@@ -1,0 +1,63 @@
+# ./docker-compose.yml
+version: "3.9"
+services:
+  web:
+    build: .
+    env_file:
+      - .env.prod  
+    command: >
+      sh -c "
+      python -c 'import importlib.util, sys; sys.exit(0 if importlib.util.find_spec(\"websockets\") else 1)'
+      || pip install --no-cache-dir -r requirements.txt;
+      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "10515:8000"
+      - "${VIEWER_REALTIME_PORT:-10516}:${VIEWER_REALTIME_PORT:-10516}"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - PYTHONUNBUFFERED=1
+      - MTX_API_HOST=mediamtx
+      - NEED_AUTH=${NEED_AUTH:-false}
+
+  db:
+    image: postgres:15-alpine
+    env_file:
+      - .env.prod  
+    ports:
+      - "${POSTGRES_PORT_EXTERNAL:-15432}:5432"    # 로컬에서 DBeaver/pgAdmin 접속 시 편의
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  mediamtx:
+    image: bluenviron/mediamtx:1.15.3
+    container_name: mediamtx
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    ports:
+      - "${MTX_RTSP_PORT:-10314}:8554"        # RTSP
+      - "${MTX_HLS_PORT:-8888}:8888/tcp"      # HLS
+      - "${MTX_WEBRTC_PORT:-8889}:8889/tcp"   # WebRTC HTTP
+      - "${MTX_WEBRTC_ICE_UDP_PORT:-8189}:8189/udp" # WebRTC ICE/UDP
+      - "18000:8000/udp"    # RTP (UDP)
+      - "18001:8001/udp"    # RTCP (UDP)
+      - "${MTX_API_PORT:-9997}:9997"        # Control API
+    volumes:
+      # Nested defaults in compose env expansion가 꼬여 오류가 나므로 단순 기본값으로 사용
+      # MTX_CONFIG_FILE이 지정되면 그 파일을 사용, 아니면 mediamtx-true.yml로 기본값
+      - "./${MTX_CONFIG_FILE:-mediamtx-true.yml}:/mediamtx.yml:ro"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9997/v3/serverinfos/get"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pg_data:

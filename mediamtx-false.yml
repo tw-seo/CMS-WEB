@@ -1,0 +1,25 @@
+# MediaMTX without external auth (open access).
+api: yes
+apiAddress: :9997
+rtspTransports: [udp, tcp]
+
+authMethod: internal
+authInternalUsers:
+  - user: any
+    pass:
+    ips: ['0.0.0.0/0', '::/0']
+    permissions:
+      - action: api
+      - action: metrics
+      - action: pprof
+      - action: read
+      - action: publish
+      - action: playback
+
+hls: no
+webrtc: no
+
+paths:
+  all:
+    sourceProtocol: udp
+    maxReaders: 8

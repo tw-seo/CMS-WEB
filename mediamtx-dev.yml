@@ -1,0 +1,25 @@
+# MediaMTX development profile (open access).
+api: yes
+apiAddress: :9997
+logLevel: info
+rtspTransports: [udp, tcp]
+
+authMethod: internal
+authInternalUsers:
+  - user: any
+    pass:
+    ips: ['0.0.0.0/0', '::/0']
+    permissions:
+      - action: api
+      - action: metrics
+      - action: pprof
+      - action: read
+      - action: publish
+      - action: playback
+
+hls: yes
+webrtc: yes
+
+paths:
+  all:
+    sourceProtocol: udp

@@ -1,0 +1,19 @@
+# MediaMTX with HTTP auth via Django.
+api: yes
+apiAddress: :9997
+rtspTransports: [udp, tcp]
+
+authMethod: http
+authHTTPAddress: http://web:8000/api/mediamtx/media/auth
+authHTTPExclude:
+  - action: api
+  - action: metrics
+  - action: pprof
+
+hls: yes
+webrtc: yes
+
+paths:
+  all:
+    sourceProtocol: udp
+    maxReaders: 8 # 한 개의 분배 주소에 붙을 수 있는 최대 개수
